@@ -1,0 +1,13 @@
+{
+  "name": "gupass",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Monorepo do GuPass (clone funcional do FixPass) — apps/frontend hoje, apps/backend depois.",
+  "scripts": {
+    "dev": "npm --prefix apps/frontend run dev",
+    "build": "npm --prefix apps/frontend run build",
+    "preview": "npm --prefix apps/frontend run preview",
+    "lint": "npm --prefix apps/frontend run lint",
+    "install:frontend": "cd apps/frontend && pnpm install"
+  }
+}
