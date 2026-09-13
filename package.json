@@ -8,6 +8,7 @@
     "build": "npm --prefix apps/frontend run build",
     "preview": "npm --prefix apps/frontend run preview",
     "lint": "npm --prefix apps/frontend run lint",
+    "test:e2e": "npm --prefix apps/frontend run test:e2e",
     "install:frontend": "cd apps/frontend && pnpm install"
   }
 }

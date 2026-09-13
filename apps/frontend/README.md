@@ -4,6 +4,17 @@ App React + TypeScript + Vite do GuPass. Ver `ARCHITECTURE.md` (nesta pasta)
 para a organização interna de cada módulo (`View → Hook → Service → Adapter`);
 ver `../../docs/` para a documentação funcional do projeto.
 
+## Testes E2E (Playwright)
+
+```
+pnpm test:e2e        # roda a suíte headless (sobe o dev server sozinho)
+pnpm test:e2e:ui     # modo interativo
+```
+
+Roda contra `vite dev` (não contra o build de produção), porque o mock de API
+(MSW) só liga em modo dev — ver `playwright.config.ts` e `e2e/`. O CI
+(`.github/workflows/ci.yml`) roda lint + build + esses testes a cada push.
+
 ## React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
