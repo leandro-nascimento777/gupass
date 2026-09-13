@@ -81,19 +81,19 @@ export const handlers = [
   }),
   ...createCrudHandlers('/api/quotes', db.quotes, {
     searchFields: ['clientName', 'code'],
-    filterFields: ['stage'],
+    filterFields: ['stage', 'clientId'],
   }),
   ...createCrudHandlers('/api/sales', db.sales, {
     searchFields: ['clientName', 'code'],
-    filterFields: ['status', 'paymentStatus'],
+    filterFields: ['status', 'paymentStatus', 'clientId'],
   }),
   ...createCrudHandlers('/api/tickets', db.tickets, {
     searchFields: ['pnr', 'passengerLastName', 'code'],
-    filterFields: ['status', 'airline'],
+    filterFields: ['status', 'airline', 'clientId'],
   }),
   ...createCrudHandlers('/api/vouchers', db.vouchers, {
     searchFields: ['clientName', 'code', 'title'],
-    filterFields: ['status'],
+    filterFields: ['status', 'clientId'],
   }),
   ...createCrudHandlers('/api/transactions', db.transactions, {
     searchFields: ['description', 'clientName'],
@@ -106,8 +106,8 @@ export const handlers = [
   ...createCrudHandlers('/api/bank-accounts', db.bankAccounts, { searchFields: ['name', 'institution'] }),
   ...createCrudHandlers('/api/commissions', db.commissions, { filterFields: ['status', 'sellerId'] }),
   ...createCrudHandlers('/api/goals', db.goals, { filterFields: ['month', 'year', 'ownerId'] }),
-  ...createCrudHandlers('/api/contracts', db.contracts, { searchFields: ['clientName', 'code'], filterFields: ['status'] }),
-  ...createCrudHandlers('/api/receipts', db.receipts, { searchFields: ['clientName', 'code'] }),
+  ...createCrudHandlers('/api/contracts', db.contracts, { searchFields: ['clientName', 'code'], filterFields: ['status', 'clientId'] }),
+  ...createCrudHandlers('/api/receipts', db.receipts, { searchFields: ['clientName', 'code'], filterFields: ['clientId'] }),
   ...createCrudHandlers('/api/fiscal-invoices', db.fiscalInvoices, { filterFields: ['status'] }),
   ...createCrudHandlers('/api/whatsapp-templates', db.whatsappTemplates, { searchFields: ['name'] }),
   ...createCrudHandlers('/api/activity-log', db.activityLog, {

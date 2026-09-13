@@ -18,6 +18,9 @@ export const clientsAdapter = {
   list(params: ListClientsParams = {}) {
     return httpClient.get<Paginated<Client>>('/clients', params)
   },
+  get(id: string) {
+    return httpClient.get<Client>(`/clients/${id}`)
+  },
   create(data: Partial<Client>) {
     return httpClient.post<Client>('/clients', data)
   },

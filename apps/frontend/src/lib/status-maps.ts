@@ -29,3 +29,14 @@ export const paymentStatusMap: Record<string, { label: string; tone: StatusTone 
   parcial: { label: 'Parcial', tone: 'info' },
   pago: { label: 'Pago', tone: 'success' },
 }
+
+export const contractStatusMap: Record<string, { label: string; tone: StatusTone }> = {
+  pendente: { label: 'Pendente', tone: 'warning' },
+  assinado: { label: 'Assinado', tone: 'success' },
+  cancelado: { label: 'Cancelado', tone: 'danger' },
+}
+
+export const voucherStatusMap: Record<string, { label: string; tone: StatusTone }> = {
+  rascunho: { label: 'Rascunho', tone: 'neutral' },
+  finalizado: { label: 'Finalizado', tone: 'success' },
+}

@@ -143,6 +143,15 @@ Complementar: `rascunho-voucher-VCH-FDD5C3.pdf` mostra o **documento final do vo
 
 **Gap**: ficha do cliente (`/app/clientes/:id/ficha`) não foi capturada.
 
+**Status de implementação (atualizado)**: ✅ Ficha do Cliente construída sem
+referência visual, só com base na seção 5.3 da documentação — dados do
+cliente (contato, documento, categorias) + abas de histórico (Vendas,
+Cotações, Contratos, Vouchers, Bilhetes), cada uma consultando
+`GET /api/{recurso}?clientId=...` (endpoints já existiam; só foi adicionado
+o filtro por `clientId`, ver `docs/API_CONTRACT.md`). Coberta por
+`e2e/ficha-cliente.spec.ts`. Segue faltando: Link Público (`public-link`) e
+a própria página pública `/cliente/:slug`.
+
 ## 12. Cotações (`/app/cotacoes`) — seção 6
 
 | Arquivo | Estado capturado | Observações |

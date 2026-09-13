@@ -181,10 +181,13 @@ export const sales: Sale[] = Array.from({ length: 24 }, (_, i) => {
 
 export const tickets: Ticket[] = Array.from({ length: 18 }, (_, i) => {
   const createdAt = faker.date.recent({ days: 30 }).toISOString()
+  const client = faker.helpers.maybe(() => faker.helpers.arrayElement(clients), { probability: 0.7 })
   return {
     id: `ticket-${i + 1}`,
     code: faker.string.hexadecimal({ length: 6, prefix: '', casing: 'upper' }),
     agencyId: AGENCY_ID,
+    clientId: client?.id,
+    clientName: client?.name,
     airline: faker.helpers.arrayElement(AIRLINES),
     pnr: faker.string.alphanumeric({ length: 6, casing: 'lower' }),
     passengerLastName: faker.person.lastName(),

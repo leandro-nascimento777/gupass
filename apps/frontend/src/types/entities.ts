@@ -118,6 +118,8 @@ export interface Ticket {
   id: ID
   code: string // hex, ex CE2AAA
   agencyId: ID
+  clientId?: ID
+  clientName?: string
   airline: string
   pnr: string
   passengerLastName: string

@@ -14,6 +14,10 @@ export function listClients(params: ListClientsParams = {}) {
   return clientsAdapter.list(params)
 }
 
+export function getClient(id: string) {
+  return clientsAdapter.get(id)
+}
+
 export function deleteClient(id: string) {
   return clientsAdapter.remove(id)
 }
