@@ -15,8 +15,15 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/comp
 import type { ClientPFFormValues } from '@/modules/clientes/validators/client.schema'
 import { lookupCep, lookupCpf } from '@/modules/clientes/services/document-lookup.service'
 
-export function ClientPFStep1({ form }: { form: UseFormReturn<ClientPFFormValues> }) {
+interface ClientPFStep1Props {
+  form: UseFormReturn<ClientPFFormValues>
+  /** Campos ocultos pela config "Campos do Formulário" da página pública (ver Link Público). */
+  hiddenFields?: string[]
+}
+
+export function ClientPFStep1({ form, hiddenFields = [] }: ClientPFStep1Props) {
   const [loadingCpf, setLoadingCpf] = useState(false)
+  const isHidden = (key: string) => hiddenFields.includes(key)
 
   async function handlePreencherDados() {
     setLoadingCpf(true)
@@ -74,71 +81,125 @@ export function ClientPFStep1({ form }: { form: UseFormReturn<ClientPFFormValues
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>E-mail</FormLabel>
-              <FormControl>
-                <Input placeholder="email@exemplo.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-
-      <FormField
-        control={form.control}
-        name="telefone"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Telefone</FormLabel>
-            <FormControl>
-              <Input placeholder="+55 (11) 91234-5678" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
+        {!isHidden('email') && (
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>E-mail</FormLabel>
+                <FormControl>
+                  <Input placeholder="email@exemplo.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         )}
-      />
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <FormField
-          control={form.control}
-          name="dataNascimento"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Data de Nascimento</FormLabel>
-              <FormControl>
-                <Input type="date" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="nacionalidade"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nacionalidade</FormLabel>
-              <FormControl>
-                <Input placeholder="Ex: Brasileira" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {!isHidden('telefone') && (
         <FormField
           control={form.control}
-          name="sexo"
+          name="telefone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Sexo</FormLabel>
+              <FormLabel>Telefone</FormLabel>
+              <FormControl>
+                <Input placeholder="+55 (11) 91234-5678" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      )}
+
+      {(!isHidden('dataNascimento') || !isHidden('nacionalidade')) && (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {!isHidden('dataNascimento') && (
+            <FormField
+              control={form.control}
+              name="dataNascimento"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Data de Nascimento</FormLabel>
+                  <FormControl>
+                    <Input type="date" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+          {!isHidden('nacionalidade') && (
+            <FormField
+              control={form.control}
+              name="nacionalidade"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nacionalidade</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Ex: Brasileira" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+        </div>
+      )}
+
+      {(!isHidden('sexo') || !isHidden('rg')) && (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {!isHidden('sexo') && (
+            <FormField
+              control={form.control}
+              name="sexo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Sexo</FormLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Selecione..." />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="feminino">Feminino</SelectItem>
+                      <SelectItem value="masculino">Masculino</SelectItem>
+                      <SelectItem value="outro">Outro</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+          {!isHidden('rg') && (
+            <FormField
+              control={form.control}
+              name="rg"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>RG</FormLabel>
+                  <FormControl>
+                    <Input placeholder="00.000.000-0" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+        </div>
+      )}
+
+      {!isHidden('origemFonte') && (
+        <FormField
+          control={form.control}
+          name="origemFonte"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Origem / Fonte</FormLabel>
               <Select value={field.value} onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger className="w-full">
@@ -146,8 +207,10 @@ export function ClientPFStep1({ form }: { form: UseFormReturn<ClientPFFormValues
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="feminino">Feminino</SelectItem>
-                  <SelectItem value="masculino">Masculino</SelectItem>
+                  <SelectItem value="indicacao">Indicação</SelectItem>
+                  <SelectItem value="instagram">Instagram</SelectItem>
+                  <SelectItem value="site">Site</SelectItem>
+                  <SelectItem value="whatsapp">WhatsApp</SelectItem>
                   <SelectItem value="outro">Outro</SelectItem>
                 </SelectContent>
               </Select>
@@ -155,45 +218,7 @@ export function ClientPFStep1({ form }: { form: UseFormReturn<ClientPFFormValues
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="rg"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>RG</FormLabel>
-              <FormControl>
-                <Input placeholder="00.000.000-0" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-
-      <FormField
-        control={form.control}
-        name="origemFonte"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Origem / Fonte</FormLabel>
-            <Select value={field.value} onValueChange={field.onChange}>
-              <FormControl>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Selecione..." />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                <SelectItem value="indicacao">Indicação</SelectItem>
-                <SelectItem value="instagram">Instagram</SelectItem>
-                <SelectItem value="site">Site</SelectItem>
-                <SelectItem value="whatsapp">WhatsApp</SelectItem>
-                <SelectItem value="outro">Outro</SelectItem>
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      )}
     </div>
   )
 }

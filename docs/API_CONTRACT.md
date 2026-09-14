@@ -5,7 +5,7 @@
 > backend real (Nest, feito à parte) deve implementar — o frontend não conhece
 > nem depende da implementação real, só deste formato de request/response.
 >
-> Implementação dos mocks: `fixpass-frontend/src/lib/mocks/` (`seed.ts` dados
+> Implementação dos mocks: `apps/frontend/src/lib/mocks/` (`seed.ts` dados
 > fake, `store.ts` estado mutável em memória, `handler-factory.ts` fábrica CRUD
 > genérica, `handlers.ts` composição final).
 
@@ -33,17 +33,17 @@
 | Membros da equipe | `/api/members` (CRUD) | — | name, email |
 | Categorias de clientes | `/api/client-categories` (CRUD) | — | name |
 | Clientes | `/api/clients` (CRUD) | `personType` | name, email, document |
-| Cotações | `/api/quotes` (CRUD) | `stage` | clientName, code |
-| Vendas | `/api/sales` (CRUD) | `status`, `paymentStatus` | clientName, code |
-| Bilhetes | `/api/tickets` (CRUD) | `status`, `airline` | pnr, passengerLastName, code |
-| Vouchers | `/api/vouchers` (CRUD) | `status` | clientName, code, title |
+| Cotações | `/api/quotes` (CRUD) | `stage`, `clientId` | clientName, code |
+| Vendas | `/api/sales` (CRUD) | `status`, `paymentStatus`, `clientId` | clientName, code |
+| Bilhetes | `/api/tickets` (CRUD) | `status`, `airline`, `clientId` | pnr, passengerLastName, code |
+| Vouchers | `/api/vouchers` (CRUD) | `status`, `clientId` | clientName, code, title |
 | Transações | `/api/transactions` (CRUD) | `type`, `status` | description, clientName |
 | Contas a pagar | `/api/payables` (CRUD) | `status` | description |
 | Contas bancárias | `/api/bank-accounts` (CRUD) | — | name, institution |
 | Comissões | `/api/commissions` (CRUD) | `status`, `sellerId` | — |
 | Metas | `/api/goals` (CRUD) | `month`, `year`, `ownerId` | — |
-| Contratos | `/api/contracts` (CRUD) | `status` | clientName, code |
-| Recibos | `/api/receipts` (CRUD) | — | clientName, code |
+| Contratos | `/api/contracts` (CRUD) | `status`, `clientId` | clientName, code |
+| Recibos | `/api/receipts` (CRUD) | `clientId` | clientName, code |
 | Notas fiscais | `/api/fiscal-invoices` (CRUD) | `status` | — |
 | Templates WhatsApp | `/api/whatsapp-templates` (CRUD) | — | name |
 | Log de atividades | `/api/activity-log` (CRUD, só leitura na UI) | `category` | description, userName, entityRef |
@@ -57,6 +57,27 @@ Cada recurso "(CRUD)" expõe, via a fábrica genérica (`handler-factory.ts`):
 - `POST /api/<recurso>` — cria (retorna `201`)
 - `PATCH /api/<recurso>/:id` — atualiza parcialmente
 - `DELETE /api/<recurso>/:id` — remove (retorna `204`)
+
+## Link Público de Clientes (`/app/clientes/public-link`, seção 5.5)
+
+Não é um recurso paginado — um único registro por agência (`ClientPublicLinkSettings`), mais dois sub-recursos (arrays dentro dele). Autenticado (aba admin):
+
+| Ação | Rota |
+|---|---|
+| Ler config | `GET /api/clients/public-link-settings` |
+| Atualizar tema/cor/campos ocultos | `PATCH /api/clients/public-link-settings` (`{ theme?, backgroundColor?, hiddenFields? }`) |
+| Criar link gerenciável | `POST /api/clients/public-link-settings/managed-links` (`{ name, utmSource? }`, máx. 5 — `400` se exceder) |
+| Remover link gerenciável | `DELETE /api/clients/public-link-settings/managed-links/:id` |
+| Gerar link temporário | `POST /api/clients/public-link-settings/temporary-links` (expira em 24h) |
+| Remover link temporário | `DELETE /api/clients/public-link-settings/temporary-links/:id` |
+
+Consumido pela página pública, **sem autenticação**, para resolver um slug (permanente, gerenciável ou temporário) na aparência/config que a tela deve usar:
+
+- `GET /api/public/client-link/:slug` → `PublicClientLinkInfo { agencyId, agencyName, theme, backgroundColor?, hiddenFields }`, ou `404` se o slug não existir ou o link temporário já tiver expirado.
+
+A criação do cliente em si, feita pela página pública ao submeter o formulário, usa o mesmo `POST /api/clients` do CRUD normal — não existe um endpoint `/api/public/clients` separado.
+
+> Nota de implementação: no mock, a rota `GET/PATCH /api/clients/public-link-settings` precisa estar registrada **antes** de `createCrudHandlers('/api/clients', ...)` em `handlers.ts`, senão o `:id` genérico do CRUD casa com `public-link-settings` e responde `404` primeiro.
 
 ## Formato `DashboardKpis` (`GET /api/dashboard`)
 
@@ -86,7 +107,9 @@ Cada recurso "(CRUD)" expõe, via a fábrica genérica (`handler-factory.ts`):
 Ver `src/types/entities.ts` para o shape completo de todas as entidades (Agency,
 Client, Quote, Sale, Ticket, Voucher, Transaction, Payable, BankAccount,
 Commission, Goal, Contract, Receipt, FiscalInvoice, WhatsappTemplate,
-ActivityLogEntry, Supplier, Plan, Subscription, Task, CalendarEvent).
+ActivityLogEntry, Supplier, Plan, Subscription, Task, CalendarEvent,
+ClientPublicLinkSettings, ManagedPublicLink, TemporaryPublicLink,
+PublicClientLinkInfo).
 
 ## Pendências para o backend
 

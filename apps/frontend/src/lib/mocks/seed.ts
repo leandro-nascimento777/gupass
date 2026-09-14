@@ -7,6 +7,7 @@ import type {
   CalendarEvent,
   Client,
   ClientCategory,
+  ClientPublicLinkSettings,
   Commission,
   Contract,
   FiscalInvoice,
@@ -103,28 +104,66 @@ export const clientCategories: ClientCategory[] = [
   { id: 'cat-4', agencyId: AGENCY_ID, name: 'Grupo/Família', color: '#f59e0b' },
 ]
 
-export const clients: Client[] = Array.from({ length: 32 }, (_, i) => {
-  const personType = faker.helpers.arrayElement(['PF', 'PF', 'PF', 'PJ']) as 'PF' | 'PJ'
-  const createdAt = faker.date.past({ years: 1 }).toISOString()
-  return {
-    id: `client-${i + 1}`,
-    agencyId: AGENCY_ID,
-    personType,
-    name: personType === 'PF' ? faker.person.fullName() : faker.company.name(),
-    email: faker.internet.email().toLowerCase(),
-    phone: faker.phone.number({ style: 'international' }),
-    document: personType === 'PF' ? faker.string.numeric(11) : faker.string.numeric(14),
-    birthDate: personType === 'PF' ? faker.date.birthdate().toISOString() : undefined,
-    city: faker.location.city(),
-    state: faker.location.state({ abbreviated: true }),
-    categoryIds: faker.helpers.arrayElements(
-      clientCategories.map((c) => c.id),
-      { min: 0, max: 2 },
-    ),
-    createdAt,
-    updatedAt: createdAt,
-  }
-})
+/** Primeiro cliente espelha o exemplo da referência real da Ficha do Cliente
+ * (todos os campos preenchidos), pra dar pra comparar lado a lado. */
+const REFERENCE_CLIENT: Client = {
+  id: 'client-1',
+  agencyId: AGENCY_ID,
+  personType: 'PF',
+  name: 'Leandro Theodoro Nascimento',
+  email: 'leandro_contato@live.com',
+  phone: '(10) 09103-7736',
+  document: '020.071.591-71',
+  birthDate: '1987-12-11',
+  gender: 'masculino',
+  zipCode: '13178-585',
+  neighborhood: 'Loteamento Residencial Viva Vista',
+  street: 'Avenida José Carlos Amaral',
+  addressNumber: '1244',
+  city: 'Sumaré',
+  state: 'SP',
+  passportNumber: 'A123312B',
+  passportExpiry: '2032-01-01',
+  categoryIds: ['cat-3'],
+  createdAt: '2026-09-01T12:00:00.000Z',
+  updatedAt: '2026-09-01T12:00:00.000Z',
+}
+
+export const clients: Client[] = [
+  REFERENCE_CLIENT,
+  ...Array.from({ length: 31 }, (_, i) => {
+    const personType = faker.helpers.arrayElement(['PF', 'PF', 'PF', 'PJ']) as 'PF' | 'PJ'
+    const createdAt = faker.date.past({ years: 1 }).toISOString()
+    return {
+      id: `client-${i + 2}`,
+      agencyId: AGENCY_ID,
+      personType,
+      name: personType === 'PF' ? faker.person.fullName() : faker.company.name(),
+      email: faker.internet.email().toLowerCase(),
+      phone: faker.phone.number({ style: 'international' }),
+      document: personType === 'PF' ? faker.string.numeric(11) : faker.string.numeric(14),
+      birthDate: personType === 'PF' ? faker.date.birthdate().toISOString() : undefined,
+      city: faker.location.city(),
+      state: faker.location.state({ abbreviated: true }),
+      categoryIds: faker.helpers.arrayElements(
+        clientCategories.map((c) => c.id),
+        { min: 0, max: 2 },
+      ),
+      createdAt,
+      updatedAt: createdAt,
+    }
+  }),
+]
+
+export const clientPublicLinkSettings: ClientPublicLinkSettings = {
+  agencyId: AGENCY_ID,
+  permanentSlug: agency.slug,
+  theme: 'classico',
+  backgroundColor: undefined,
+  hiddenFields: [],
+  managedLinks: [],
+  temporaryLinks: [],
+}
 
 const QUOTE_STAGES: QuoteStage[] = [
   'nova',

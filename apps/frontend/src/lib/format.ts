@@ -12,10 +12,26 @@ export function formatCurrency(value: number) {
   return currencyFormatter.format(value)
 }
 
+/**
+ * Datas "puras" (sem horário, ex. "1987-12-11" — nascimento, validade de
+ * passaporte) precisam ser lidas em UTC, senão `new Date(...)` as ancora em
+ * meia-noite UTC e o fuso local pode exibir o dia anterior (ex. virou
+ * 10/12 em vez de 11/12 num fuso UTC-3). Datas com horário (createdAt etc.)
+ * continuam no fuso do navegador normalmente.
+ */
 export function formatDate(value: string | Date) {
-  return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(
-    new Date(value),
-  )
+  const isDateOnly = typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)
+  return new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    timeZone: isDateOnly ? 'UTC' : undefined,
+  }).format(new Date(value))
+}
+
+/** "set. de 2026" — usado na Ficha do Cliente ("Cliente desde..."). */
+export function formatMonthYear(value: string | Date) {
+  return new Intl.DateTimeFormat('pt-BR', { month: 'short', year: 'numeric' }).format(new Date(value))
 }
 
 export function formatRelativeTime(value: string | Date) {

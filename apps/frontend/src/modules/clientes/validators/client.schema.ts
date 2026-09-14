@@ -82,3 +82,55 @@ export const PJ_STEP_FIELDS: (keyof ClientPJFormValues)[][] = [
   [],
   [],
 ]
+
+/** Defaults do wizard — usados pelo modal interno (NovoClienteDialog) e pela
+ * página pública de captação (ClientePublicoPage), daí ficarem aqui, junto
+ * do schema, em vez de duplicados nos dois lugares. */
+export const PF_DEFAULTS: ClientPFFormValues = {
+  personType: 'PF',
+  cpf: '',
+  nomeCompleto: '',
+  email: '',
+  telefone: '',
+  dataNascimento: '',
+  nacionalidade: '',
+  sexo: undefined,
+  rg: '',
+  origemFonte: undefined,
+  cep: '',
+  bairro: '',
+  logradouro: '',
+  numero: '',
+  complemento: '',
+  cidade: '',
+  estado: '',
+  numeroPassaporte: '',
+  validadePassaporte: '',
+  paisEmissor: '',
+  observacoesPassaporte: '',
+  responsavel: 'atual',
+  dependentes: [],
+}
+
+export const PJ_DEFAULTS: ClientPJFormValues = {
+  personType: 'PJ',
+  cnpj: '',
+  razaoSocial: '',
+  nomeFantasia: '',
+  telefone: '',
+  email: '',
+  inscricaoEstadual: '',
+  inscricaoMunicipal: '',
+  origemFonte: undefined,
+  cep: '',
+  bairro: '',
+  logradouro: '',
+  numero: '',
+  complemento: '',
+  cidade: '',
+  estado: '',
+  representanteLegal: '',
+  cargo: '',
+  observacoesContato: '',
+  funcionarios: [],
+}

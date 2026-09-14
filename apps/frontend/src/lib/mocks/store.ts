@@ -10,6 +10,11 @@ export const db = {
   members: [...seed.members],
   clientCategories: [...seed.clientCategories],
   clients: [...seed.clients],
+  clientPublicLinkSettings: {
+    ...seed.clientPublicLinkSettings,
+    managedLinks: [...seed.clientPublicLinkSettings.managedLinks],
+    temporaryLinks: [...seed.clientPublicLinkSettings.temporaryLinks],
+  },
   quotes: [...seed.quotes],
   sales: [...seed.sales],
   tickets: [...seed.tickets],

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Building2, Check, ChevronLeft, ChevronRight, User, UserPlus } from 'lucide-react'
+import { Check, ChevronLeft, ChevronRight, UserPlus } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -10,11 +10,11 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Form } from '@/components/ui/form'
-import { cn } from '@/lib/utils'
 import {
+  PF_DEFAULTS,
   PF_STEPS,
   PF_STEP_FIELDS,
+  PJ_DEFAULTS,
   PJ_STEPS,
   PJ_STEP_FIELDS,
   clientPFSchema,
@@ -24,58 +24,9 @@ import {
 } from '../validators/client.schema'
 import { useCreateClient } from '../hooks/useClients'
 import { WizardStepIndicator } from '@/components/shared/client-form/WizardStepIndicator'
-import { ClientPFStep1, ClientPFStep3, ClientPFStep4, ClientEnderecoStep } from '@/components/shared/client-form/ClientPFStepFields'
-import { ClientPJStep1, ClientPJStep3, ClientPJStep4 } from '@/components/shared/client-form/ClientPJStepFields'
+import { PersonTypeToggle } from '@/components/shared/client-form/PersonTypeToggle'
+import { ClientWizardFormBody } from '@/components/shared/client-form/ClientWizardFormBody'
 import { useUiStore } from '@/lib/stores/ui-store'
-
-const PF_DEFAULTS: ClientPFFormValues = {
-  personType: 'PF',
-  cpf: '',
-  nomeCompleto: '',
-  email: '',
-  telefone: '',
-  dataNascimento: '',
-  nacionalidade: '',
-  sexo: undefined,
-  rg: '',
-  origemFonte: undefined,
-  cep: '',
-  bairro: '',
-  logradouro: '',
-  numero: '',
-  complemento: '',
-  cidade: '',
-  estado: '',
-  numeroPassaporte: '',
-  validadePassaporte: '',
-  paisEmissor: '',
-  observacoesPassaporte: '',
-  responsavel: 'atual',
-  dependentes: [],
-}
-
-const PJ_DEFAULTS: ClientPJFormValues = {
-  personType: 'PJ',
-  cnpj: '',
-  razaoSocial: '',
-  nomeFantasia: '',
-  telefone: '',
-  email: '',
-  inscricaoEstadual: '',
-  inscricaoMunicipal: '',
-  origemFonte: undefined,
-  cep: '',
-  bairro: '',
-  logradouro: '',
-  numero: '',
-  complemento: '',
-  cidade: '',
-  estado: '',
-  representanteLegal: '',
-  cargo: '',
-  observacoesContato: '',
-  funcionarios: [],
-}
 
 /**
  * Wizard "Novo Cliente" — modal centralizado com 4 passos, PF/PJ (ver referência
@@ -148,52 +99,12 @@ export function NovoClienteDialog() {
         </DialogHeader>
 
         <div className="flex flex-col gap-4 border-b px-6 py-4">
-          <div className="inline-flex w-fit items-center gap-1 rounded-full border bg-muted p-1">
-            <button
-              type="button"
-              onClick={() => setPersonType('PF')}
-              className={cn(
-                'flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium',
-                personType === 'PF' ? 'bg-card shadow-sm' : 'text-muted-foreground',
-              )}
-            >
-              <User className="size-3.5" /> Pessoa Física
-            </button>
-            <button
-              type="button"
-              onClick={() => setPersonType('PJ')}
-              className={cn(
-                'flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium',
-                personType === 'PJ' ? 'bg-card shadow-sm' : 'text-muted-foreground',
-              )}
-            >
-              <Building2 className="size-3.5" /> Pessoa Jurídica
-            </button>
-          </div>
-
+          <PersonTypeToggle value={personType} onChange={setPersonType} />
           <WizardStepIndicator steps={steps} currentStep={step} />
         </div>
 
         <div className="flex-1 overflow-y-auto px-6 py-4">
-          {personType === 'PF' ? (
-            <Form {...pfForm}>
-              <form>
-                {step === 0 && <ClientPFStep1 form={pfForm} />}
-                {step === 1 && <ClientEnderecoStep form={pfForm} />}
-                {step === 2 && <ClientPFStep3 form={pfForm} />}
-                {step === 3 && <ClientPFStep4 form={pfForm} />}
-              </form>
-            </Form>
-          ) : (
-            <Form {...pjForm}>
-              <form>
-                {step === 0 && <ClientPJStep1 form={pjForm} />}
-                {step === 1 && <ClientEnderecoStep form={pjForm} />}
-                {step === 2 && <ClientPJStep3 form={pjForm} />}
-                {step === 3 && <ClientPJStep4 form={pjForm} />}
-              </form>
-            </Form>
-          )}
+          <ClientWizardFormBody personType={personType} step={step} pfForm={pfForm} pjForm={pjForm} />
         </div>
 
         <div className="flex items-center justify-between border-t p-4">

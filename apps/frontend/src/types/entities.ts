@@ -52,6 +52,48 @@ export interface ClientCategory {
   color?: string
 }
 
+/**
+ * Configuração da página pública de captação de clientes (seção 5.5 da doc).
+ * Um registro por agência — não é uma lista paginada, por isso não segue o
+ * mesmo contrato REST genérico das outras entidades (ver docs/API_CONTRACT.md).
+ */
+export type PublicLinkTheme = 'classico' | 'aviacao' | 'nuvens'
+
+export interface ManagedPublicLink {
+  id: ID
+  name: string
+  slug: string
+  utmSource?: string
+  createdAt: string
+}
+
+export interface TemporaryPublicLink {
+  id: ID
+  slug: string
+  createdAt: string
+  expiresAt: string
+}
+
+export interface ClientPublicLinkSettings {
+  agencyId: ID
+  permanentSlug: string
+  theme: PublicLinkTheme
+  backgroundColor?: string
+  /** Chaves dos campos visíveis no formulário público; vazio = todos visíveis. */
+  hiddenFields: string[]
+  managedLinks: ManagedPublicLink[]
+  temporaryLinks: TemporaryPublicLink[]
+}
+
+/** O que a página pública (`/cliente/:slug`) precisa saber sobre o link acessado. */
+export interface PublicClientLinkInfo {
+  agencyId: ID
+  agencyName: string
+  theme: PublicLinkTheme
+  backgroundColor?: string
+  hiddenFields: string[]
+}
+
 export interface Client {
   id: ID
   agencyId: ID
@@ -61,8 +103,20 @@ export interface Client {
   phone?: string
   document?: string
   birthDate?: string
+  nationality?: string
+  gender?: string
+  rg?: string
+  sourceChannel?: string // "Origem" — indicação, instagram, site, etc.
   city?: string
   state?: string
+  zipCode?: string
+  neighborhood?: string
+  street?: string
+  addressNumber?: string
+  complement?: string
+  passportNumber?: string
+  passportExpiry?: string
+  passportCountry?: string
   categoryIds: ID[]
   createdAt: string
   updatedAt: string

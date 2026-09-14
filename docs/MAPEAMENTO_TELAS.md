@@ -141,16 +141,40 @@ Complementar: `rascunho-voucher-VCH-FDD5C3.pdf` mostra o **documento final do vo
 
 **Observação**: o wizard interno "Novo Cliente" (modal disparado pelo botão "Novo Cliente" da lista) **não** aparece aberto nos arquivos rotulados "Clientes" — ele está capturado nos arquivos rotulados "Dashboard" (seção 1 acima, `13：51：08` em diante). Não há gap real, só está sob outro nome de arquivo.
 
-**Gap**: ficha do cliente (`/app/clientes/:id/ficha`) não foi capturada.
+**Gap (fechado)**: a ficha do cliente (`/app/clientes/:id/ficha`) não tinha
+sido capturada quando o mapeamento original foi feito — o usuário depois
+forneceu a captura real (`Clientes - FixPass 21：27：07`), e a tela foi
+reconstruída pra bater com ela.
 
-**Status de implementação (atualizado)**: ✅ Ficha do Cliente construída sem
-referência visual, só com base na seção 5.3 da documentação — dados do
-cliente (contato, documento, categorias) + abas de histórico (Vendas,
-Cotações, Contratos, Vouchers, Bilhetes), cada uma consultando
-`GET /api/{recurso}?clientId=...` (endpoints já existiam; só foi adicionado
-o filtro por `clientId`, ver `docs/API_CONTRACT.md`). Coberta por
-`e2e/ficha-cliente.spec.ts`. Segue faltando: Link Público (`public-link`) e
-a própria página pública `/cliente/:slug`.
+**Status de implementação (atualizado)**: ✅ Ficha do Cliente e ✅ Link
+Público — ambos construídos e testados.
+
+- **Ficha do Cliente**: header roxo (`--brand-dark`) com avatar/iniciais,
+  badge PF/PJ, categorias, contato e "Cliente desde"; KPIs (Faturamento/LTV,
+  Lucro Estimado, Ticket Médio, Última Movimentação) calculados a partir do
+  histórico de vendas; abas Dados (Dados Pessoais/Contato/Endereço/
+  Passaporte) | Viagens | Cotações | Vendas | Recibos | Contratos; sidebar
+  "Ações Rápidas" (WhatsApp/Ligar/Copiar Dados; Gerar Contrato/Emitir Recibo
+  como "em construção", já que esses módulos ainda não existem). O wizard
+  "Novo Cliente" foi corrigido para persistir todos os 4 passos (antes só
+  nome/email/telefone/cidade eram salvos — endereço e passaporte eram
+  descartados). `Client` ganhou os campos correspondentes em
+  `types/entities.ts`. Corrigido também um bug de fuso horário em
+  `formatDate` que exibia datas "puras" (nascimento, validade de passaporte)
+  um dia adiantado/atrasado dependendo do fuso do navegador. Coberta por
+  `e2e/ficha-cliente.spec.ts`, incluindo um teste que bate campo a campo com
+  a captura real (cliente `client-1` do seed espelha os dados da referência).
+- **Link Público** (`/app/clientes/public-link`): link permanente (copiável),
+  até 5 links gerenciáveis (nome + UTM), links temporários (24h), config de
+  campos visíveis, seletor de tema (Clássico/Aviação/Nuvens) ou cor de fundo,
+  e preview ao vivo via iframe da página pública real. A página pública
+  (`/cliente/:slug`) resolve o slug (permanente, gerenciável ou temporário),
+  aplica o tema, e reusa o mesmo wizard PF/PJ de 4 passos do modal interno
+  (extraído para `components/shared/client-form/`) — submeter cria o cliente
+  de verdade via o mesmo service usado pelo wizard interno. O preview do
+  iframe reflete tema/cor ainda não salvos via querystring, contornando o
+  fato de MSW não compartilhar estado entre a aba admin e o iframe (cada um
+  roda seu próprio mock em memória). Coberta por `e2e/public-link.spec.ts`.
 
 ## 12. Cotações (`/app/cotacoes`) — seção 6
 

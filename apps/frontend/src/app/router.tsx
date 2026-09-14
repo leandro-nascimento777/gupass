@@ -66,10 +66,13 @@ export const router = createBrowserRouter([
     element: <AuthLayout />,
     children: [
       { path: '/login', element: <LoginPage /> },
-      { path: '/cliente/:slug', element: <ClientePublicoPage /> },
       { path: '/cotacao/:slug', element: <CotacaoPublicoPage /> },
     ],
   },
+
+  // Fora do AuthLayout de propósito: controla o próprio visual (tema por
+  // agência), não o cabeçalho fixo de login/páginas públicas genéricas.
+  { path: '/cliente/:slug', element: <ClientePublicoPage /> },
 
   {
     element: (
