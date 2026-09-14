@@ -98,7 +98,7 @@ export function NovaCotacaoDialog() {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="flex max-h-[85vh] flex-col gap-0 p-0 sm:max-w-lg">
+      <DialogContent className="flex max-h-[85vh] flex-col gap-0 p-0 sm:max-w-3xl">
         <DialogHeader className="flex-row items-center gap-3 space-y-0 border-b p-6">
           <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted">
             <FileText className="size-5" />
