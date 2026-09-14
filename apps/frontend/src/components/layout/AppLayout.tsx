@@ -1,5 +1,9 @@
 import { Outlet } from 'react-router-dom'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { NovoClienteDialog } from '@/modules/clientes/components/NovoClienteDialog'
+import { NovoBilheteSheet } from '@/modules/bilhetes/components/NovoBilheteSheet'
+import { NovaCotacaoDialog } from '@/modules/cotacoes/components/NovaCotacaoDialog'
+import { NovaVendaDialog } from '@/modules/financeiro/vendas/components/NovaVendaDialog'
 import { Topbar } from './Topbar'
 import { QuickActionsBar } from './QuickActionsBar'
 import { WhatsappFab } from './WhatsappFab'
@@ -21,6 +25,12 @@ export function AppLayout() {
         </main>
         <WhatsappFab />
         <CommandPalette />
+
+        {/* Atalhos da QuickActionsBar: abrem por cima da tela atual, nunca navegam. */}
+        <NovoClienteDialog />
+        <NovoBilheteSheet />
+        <NovaCotacaoDialog />
+        <NovaVendaDialog />
       </div>
     </TooltipProvider>
   )

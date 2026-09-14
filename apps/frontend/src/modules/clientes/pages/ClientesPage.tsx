@@ -2,16 +2,16 @@ import { useState } from 'react'
 import { Search, SlidersHorizontal, UserPlus } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { useUiStore } from '@/lib/stores/ui-store'
 import { useClients } from '../hooks/useClients'
 import { useClientCategories } from '../hooks/useClientCategories'
 import { ClientesTable } from '../components/ClientesTable'
-import { NovoClienteDialog } from '../components/NovoClienteDialog'
 
 export function ClientesPage() {
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(20)
-  const [wizardOpen, setWizardOpen] = useState(false)
+  const setNovoClienteDialogOpen = useUiStore((s) => s.setNovoClienteDialogOpen)
 
   const { data, isLoading } = useClients({ page, pageSize, q: search || undefined })
   const { data: categoriesData } = useClientCategories()
@@ -35,7 +35,7 @@ export function ClientesPage() {
           <SlidersHorizontal className="size-4" />
           Filtros
         </Button>
-        <Button className="ml-auto" onClick={() => setWizardOpen(true)}>
+        <Button className="ml-auto" onClick={() => setNovoClienteDialogOpen(true)}>
           <UserPlus className="size-4" />
           Novo Cliente
         </Button>
@@ -54,8 +54,6 @@ export function ClientesPage() {
           setPage(1)
         }}
       />
-
-      <NovoClienteDialog open={wizardOpen} onOpenChange={setWizardOpen} />
     </div>
   )
 }

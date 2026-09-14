@@ -23,14 +23,10 @@ import {
   type ClientPJFormValues,
 } from '../validators/client.schema'
 import { useCreateClient } from '../hooks/useClients'
-import { WizardStepIndicator } from './WizardStepIndicator'
-import { ClientPFStep1, ClientPFStep3, ClientPFStep4, ClientEnderecoStep } from './ClientPFStepFields'
-import { ClientPJStep1, ClientPJStep3, ClientPJStep4 } from './ClientPJStepFields'
-
-interface NovoClienteDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}
+import { WizardStepIndicator } from '@/components/shared/client-form/WizardStepIndicator'
+import { ClientPFStep1, ClientPFStep3, ClientPFStep4, ClientEnderecoStep } from '@/components/shared/client-form/ClientPFStepFields'
+import { ClientPJStep1, ClientPJStep3, ClientPJStep4 } from '@/components/shared/client-form/ClientPJStepFields'
+import { useUiStore } from '@/lib/stores/ui-store'
 
 const PF_DEFAULTS: ClientPFFormValues = {
   personType: 'PF',
@@ -81,8 +77,15 @@ const PJ_DEFAULTS: ClientPJFormValues = {
   funcionarios: [],
 }
 
-/** Wizard "Novo Cliente" — modal centralizado com 4 passos, PF/PJ (ver referência real). */
-export function NovoClienteDialog({ open, onOpenChange }: NovoClienteDialogProps) {
+/**
+ * Wizard "Novo Cliente" — modal centralizado com 4 passos, PF/PJ (ver referência
+ * real). Montado uma única vez em AppLayout e controlado pelo ui-store, porque
+ * o atalho "Novo Cliente" da QuickActionsBar precisa abri-lo de qualquer tela,
+ * não só da página de Clientes (nunca navega — ver ARCHITECTURE.md).
+ */
+export function NovoClienteDialog() {
+  const open = useUiStore((s) => s.novoClienteDialogOpen)
+  const onOpenChange = useUiStore((s) => s.setNovoClienteDialogOpen)
   const [personType, setPersonType] = useState<'PF' | 'PJ'>('PF')
   const [step, setStep] = useState(0)
   const createClient = useCreateClient()

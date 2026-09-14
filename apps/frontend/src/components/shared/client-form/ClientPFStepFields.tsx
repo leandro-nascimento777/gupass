@@ -12,8 +12,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
-import type { ClientPFFormValues } from '../validators/client.schema'
-import { lookupCep, lookupCpf } from '../services/document-lookup.service'
+import type { ClientPFFormValues } from '@/modules/clientes/validators/client.schema'
+import { lookupCep, lookupCpf } from '@/modules/clientes/services/document-lookup.service'
 
 export function ClientPFStep1({ form }: { form: UseFormReturn<ClientPFFormValues> }) {
   const [loadingCpf, setLoadingCpf] = useState(false)

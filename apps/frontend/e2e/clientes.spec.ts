@@ -16,7 +16,9 @@ test.describe('clientes', () => {
 
   test('cria um cliente PF pelo wizard (view -> hook -> service -> adapter)', async ({ page }) => {
     await page.goto('/app/clientes')
-    await page.getByRole('button', { name: 'Novo Cliente' }).click()
+    // A QuickActionsBar também tem um botão "Novo Cliente" (abre o mesmo modal
+    // de qualquer tela) — pega o da própria página de Clientes, não o atalho.
+    await page.getByRole('button', { name: 'Novo Cliente' }).last().click()
 
     const dialog = page.getByRole('dialog', { name: 'Novo Cliente' })
     await expect(dialog).toBeVisible()

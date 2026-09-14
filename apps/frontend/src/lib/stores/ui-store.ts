@@ -11,6 +11,25 @@ interface UiState {
 
   commandPaletteOpen: boolean
   setCommandPaletteOpen: (open: boolean) => void
+
+  /**
+   * Os atalhos da QuickActionsBar (Novo Bilhete/Cliente/Cotação/Venda) abrem o
+   * modal correspondente de onde o usuário estiver — nunca navegam pra uma
+   * página (ver referência real: o modal aparece por cima do Dashboard). Por
+   * isso o estado do dialog "Novo Cliente" mora aqui, global, e não como
+   * estado local de ClientesPage.
+   */
+  novoClienteDialogOpen: boolean
+  setNovoClienteDialogOpen: (open: boolean) => void
+
+  novoBilheteSheetOpen: boolean
+  setNovoBilheteSheetOpen: (open: boolean) => void
+
+  novaCotacaoDialogOpen: boolean
+  setNovaCotacaoDialogOpen: (open: boolean) => void
+
+  novaVendaDialogOpen: boolean
+  setNovaVendaDialogOpen: (open: boolean) => void
 }
 
 export const useUiStore = create<UiState>((set) => ({
@@ -19,4 +38,16 @@ export const useUiStore = create<UiState>((set) => ({
 
   commandPaletteOpen: false,
   setCommandPaletteOpen: (open) => set({ commandPaletteOpen: open }),
+
+  novoClienteDialogOpen: false,
+  setNovoClienteDialogOpen: (open) => set({ novoClienteDialogOpen: open }),
+
+  novoBilheteSheetOpen: false,
+  setNovoBilheteSheetOpen: (open) => set({ novoBilheteSheetOpen: open }),
+
+  novaCotacaoDialogOpen: false,
+  setNovaCotacaoDialogOpen: (open) => set({ novaCotacaoDialogOpen: open }),
+
+  novaVendaDialogOpen: false,
+  setNovaVendaDialogOpen: (open) => set({ novaVendaDialogOpen: open }),
 }))

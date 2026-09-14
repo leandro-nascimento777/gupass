@@ -168,9 +168,17 @@ export const topNavMenus: TopNavMenu[] = [
   },
 ]
 
-export const quickActions = [
-  { label: 'Novo Bilhete', href: '/app/bilhetes?new=1', icon: Ticket },
-  { label: 'Novo Cliente', href: '/app/clientes?new=1', icon: Users },
-  { label: 'Nova Cotação', href: '/app/cotacoes?new=1', icon: FileText },
-  { label: 'Nova Venda', href: '/app/vendas?new=1', icon: CalendarClock },
+export type QuickActionKind = 'bilhete' | 'cliente' | 'cotacao' | 'venda'
+
+/**
+ * Atalhos da barra verde abaixo do topbar — cada um ABRE O MODAL/PAINEL
+ * correspondente por cima da tela atual, nunca navega para uma página (ver
+ * referência real: captura mostra o modal sobre o Dashboard). O componente
+ * que abre cada modal decide o que fazer com `kind` (ver QuickActionsBar).
+ */
+export const quickActions: { label: string; icon: LucideIcon; kind: QuickActionKind }[] = [
+  { label: 'Novo Bilhete', icon: Ticket, kind: 'bilhete' },
+  { label: 'Novo Cliente', icon: Users, kind: 'cliente' },
+  { label: 'Nova Cotação', icon: FileText, kind: 'cotacao' },
+  { label: 'Nova Venda', icon: CalendarClock, kind: 'venda' },
 ]

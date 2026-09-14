@@ -12,8 +12,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
-import type { ClientPJFormValues } from '../validators/client.schema'
-import { lookupCnpj } from '../services/document-lookup.service'
+import type { ClientPJFormValues } from '@/modules/clientes/validators/client.schema'
+import { lookupCnpj } from '@/modules/clientes/services/document-lookup.service'
 
 export function ClientPJStep1({ form }: { form: UseFormReturn<ClientPJFormValues> }) {
   const [loadingCnpj, setLoadingCnpj] = useState(false)
