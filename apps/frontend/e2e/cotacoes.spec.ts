@@ -63,18 +63,25 @@ test.describe('cotações', () => {
     await expect(novaColumn.getByText('11912345678')).toBeVisible()
   })
 
-  test('"Buscar Cliente" preenche telefone/email a partir de um cliente existente', async ({ page }) => {
+  test('"Buscar Cliente" seleciona um cliente existente (card com telefone/email)', async ({ page }) => {
     // client-1 do seed espelha a referência real: Leandro Theodoro Nascimento,
-    // telefone (10) 09103-7736, email leandro_contato@live.com.
+    // telefone (10) 09103-7736, email leandro_contato@live.com. Comportamento
+    // confirmado ao vivo em fixpass.com.br/app/cotacoes: "Buscar Cliente" é só
+    // busca — ao selecionar, vira um card do cliente (sem campos editáveis).
     await page.getByRole('button', { name: 'Nova Cotação' }).first().click()
     const dialog = page.getByRole('dialog', { name: 'Nova Cotação' })
 
     // modo padrão já é "Buscar Cliente"
-    await dialog.getByPlaceholder('Nome completo *').fill('Leandro Theodoro')
-    await dialog.getByRole('button', { name: /Leandro Theodoro Nascimento/ }).click()
+    await expect(dialog.getByText('Lead', { exact: true })).toBeVisible()
+    await dialog.getByPlaceholder('Buscar cliente por nome, email ou telefone...').fill('Leandro Theodoro')
+    // maiúsculas só via CSS text-transform; o texto real no DOM é capitalizado normal
+    await dialog.getByText('Leandro Theodoro Nascimento').click()
 
-    await expect(dialog.getByPlaceholder('Nome completo *')).toHaveValue('Leandro Theodoro Nascimento')
-    await expect(dialog.getByPlaceholder('(11) 91234-5678')).toHaveValue('(10) 09103-7736')
-    await expect(dialog.getByPlaceholder('email@exemplo.com')).toHaveValue('leandro_contato@live.com')
+    // rótulo da seção muda pra "Cliente" e mostra o card selecionado
+    await expect(dialog.getByText('Cliente', { exact: true })).toBeVisible()
+    await expect(dialog.getByText('(10) 09103-7736 · leandro_contato@live.com')).toBeVisible()
+
+    await dialog.getByRole('button', { name: 'Criar Cotação' }).click()
+    await expect(page.getByText('Cotação criada.')).toBeVisible()
   })
 })
