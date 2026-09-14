@@ -137,10 +137,12 @@ export interface Quote {
   clientId?: ID
   clientName: string
   clientPhone?: string
+  clientEmail?: string
   stage: QuoteStage
   totalValue: number
   priority: 'baixa' | 'normal' | 'alta'
   ownerId?: ID
+  ownerName?: string
   notes?: string
   createdAt: string
   updatedAt: string

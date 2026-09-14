@@ -16,6 +16,7 @@ import { ClientesLayout } from '@/modules/clientes/pages/ClientesLayout'
 import { ClientesPublicLinkPage } from '@/modules/clientes/pages/ClientesPublicLinkPage'
 import { ClienteFichaPage } from '@/modules/clientes/pages/ClienteFichaPage'
 
+import { CotacoesLayout } from '@/modules/cotacoes/pages/CotacoesLayout'
 import { CotacoesPage } from '@/modules/cotacoes/pages/CotacoesPage'
 import { CotacoesCatalogPage } from '@/modules/cotacoes/pages/CotacoesCatalogPage'
 import { CotacoesPublicLinkPage } from '@/modules/cotacoes/pages/CotacoesPublicLinkPage'
@@ -98,9 +99,15 @@ export const router = createBrowserRouter([
           },
           { path: 'clientes/:id/ficha', element: <ClienteFichaPage /> },
 
-          { path: 'cotacoes', element: <CotacoesPage /> },
-          { path: 'cotacoes/catalog', element: <CotacoesCatalogPage /> },
-          { path: 'cotacoes/public-link', element: <CotacoesPublicLinkPage /> },
+          {
+            path: 'cotacoes',
+            element: <CotacoesLayout />,
+            children: [
+              { index: true, element: <CotacoesPage /> },
+              { path: 'catalog', element: <CotacoesCatalogPage /> },
+              { path: 'public-link', element: <CotacoesPublicLinkPage /> },
+            ],
+          },
 
           { path: 'bilhetes', element: <BilhetesPage /> },
           { path: 'checkin', element: <CheckinPage /> },

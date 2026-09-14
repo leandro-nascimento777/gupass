@@ -46,7 +46,7 @@
 | Recibos | `/api/receipts` (CRUD) | `clientId` | clientName, code |
 | Notas fiscais | `/api/fiscal-invoices` (CRUD) | `status` | — |
 | Templates WhatsApp | `/api/whatsapp-templates` (CRUD) | — | name |
-| Log de atividades | `/api/activity-log` (CRUD, só leitura na UI) | `category` | description, userName, entityRef |
+| Log de atividades | `/api/activity-log` (CRUD, escrito por `lib/activity-log.ts`, só leitura na UI) | `category` | description, userName, entityRef |
 | Fornecedores | `/api/suppliers` (CRUD) | `type`, `status` | name |
 | Tarefas | `/api/tasks` (CRUD) | `status` | — |
 | Eventos de calendário | `/api/calendar-events` (CRUD) | `type` | — |

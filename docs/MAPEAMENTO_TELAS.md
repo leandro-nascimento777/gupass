@@ -185,7 +185,35 @@ Público — ambos construídos e testados.
 
 **Complementar**: o modal **"Nova Cotação"** está nos arquivos "Dashboard" `13：55：44`/`13：56：03` (seção 1). O modal **"Montar Proposta Comercial"** (após aprovar/avançar uma cotação) está em `13：56：17`, `13：57：30` etc. E o documento final está em `Proposta_COT-4688DF.pdf`.
 
-**Gap**: Catálogo de Serviços (`/app/cotacoes/catalog`) não foi capturado; cards do Kanban com dados reais não foram vistos (só board vazio).
+**Gap (parcialmente fechado)**: cards do Kanban com dados reais não tinham
+sido vistos quando o mapeamento original foi feito — o usuário depois
+forneceu uma nova captura (`Cotações - FixPass 22：04：00`) com 1 card
+populado (`COT-4688DF`) e o modal "Nova Cotação" em modo "Digitar", que
+confirmou o layout do card (código/prioridade/nome/"VALOR"+valor/telefone) e
+revelou um campo que faltava no modal (telefone só aparecia em "Digitar",
+não em "Buscar Cliente" — corrigido, ver abaixo). Catálogo de Serviços
+(`/app/cotacoes/catalog`) segue sem captura.
+
+**Status de implementação (atualizado)**: ✅ Kanban + Nova Cotação
+construídos e testados (Catálogo e Link Público de Cotação ficam para uma
+próxima sessão, só placeholder por enquanto).
+
+- **Kanban**: 6 colunas (mesmas da doc, cor da borda por estágio), KPIs
+  reais (Total de Cotações, Aguardando Resposta = contagem em
+  `aguardando_cliente`, Valor Total = soma dos não-`perdida`), busca por
+  cliente/código, drag-and-drop de verdade (`@dnd-kit/core`) com atualização
+  otimista — mover um card já troca de coluna na hora, sem esperar o
+  round-trip da API. Mover um card gera um evento no log de atividades
+  (`lib/activity-log.ts`, regra da doc seção 6 "Regras de negócio").
+- **Nova Cotação**: Nome/Telefone/Email sempre visíveis nos dois modos
+  ("Buscar Cliente" autocompleta a partir de um cliente existente; "Digitar"
+  é texto livre), Observações (0/2000), Responsável. Cria a cotação já em
+  "Nova" com `totalValue: 0` — montar a proposta (itens/valor) é uma etapa
+  futura, por isso o botão diz "Criar Cotação" em vez de "Continuar para
+  Proposta" da referência (não prometemos uma tela que ainda não existe).
+- `Quote` ganhou `clientEmail`/`ownerName` em `entities.ts`. Coberta por
+  `e2e/cotacoes.spec.ts` (kanban, drag-and-drop simulado com eventos de
+  mouse reais, criação de cotação, autocomplete de cliente).
 
 ## 13. Vendas (`/app/vendas`) — seção 9.2
 
